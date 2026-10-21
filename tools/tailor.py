@@ -26,17 +26,18 @@ OUT = PRIVATE / "tailored"
 MODEL = os.environ.get("CLAUDE_MODEL", "claude-opus-5")
 
 PRINT_CSS = """
-@page { size: A4; margin: 12mm 14mm; }
+@page { size: A4; margin: 9mm 12mm; }
 * { box-sizing: border-box; }
-body { font: 10.5pt/1.38 "Calibri", "Segoe UI", Arial, sans-serif; color: #111; margin: 0; }
+body { font: 10pt/1.3 "Calibri", "Segoe UI", Arial, sans-serif; color: #111; margin: 0; }
 h1 { font-size: 20pt; margin: 0 0 2px; letter-spacing: .2px; }
-.contact { font-size: 9.5pt; color: #333; margin-bottom: 8px; }
+.contact { font-size: 9.5pt; color: #333; margin-bottom: 4px; }
+.where { font-weight: 400; font-style: italic; color: #444; }
 .contact a { color: #111; text-decoration: none; }
-h2 { font-size: 11pt; text-transform: uppercase; letter-spacing: .8px; border-bottom: 1.2px solid #111; padding-bottom: 1px; margin: 10px 0 4px; }
-h3 { font-size: 10.5pt; margin: 6px 0 1px; display: flex; justify-content: space-between; gap: 8px; }
+h2 { font-size: 10.5pt; text-transform: uppercase; letter-spacing: .8px; border-bottom: 1.2px solid #111; padding-bottom: 1px; margin: 7px 0 3px; }
+h3 { font-size: 10pt; margin: 4px 0 1px; display: flex; justify-content: space-between; gap: 8px; }
 h3 .when { font-weight: 400; color: #333; white-space: nowrap; }
 .sub { font-style: italic; color: #333; margin: 0 0 2px; }
-ul { margin: 2px 0 4px 16px; padding: 0; }
+ul { margin: 1px 0 2px 16px; padding: 0; }
 li { margin: 0 0 1.5px; }
 p { margin: 2px 0; }
 .skills p { margin: 1px 0; }
