@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Job Radar</title>
+<meta name="description" content="Fresher jobs and internships in India, refreshed daily at 8 AM IST.">
+<meta name="theme-color" content="#0f172a">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <h1>Job Radar</h1>
+      <p id="updated" class="muted">Loading…</p>
+    </div>
+    <button id="settingsBtn" class="icon-btn" aria-label="Sync settings" title="Sync settings">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M19.4 13a7.5 7.5 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.6 7.6 0 0 0-1.7-1L14.9 3h-4l-.4 2.9a7.6 7.6 0 0 0-1.7 1l-2.5-1-2 3.5L6.4 11a7.5 7.5 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1a7.6 7.6 0 0 0 1.7 1l.4 2.9h4l.4-2.9a7.6 7.6 0 0 0 1.7-1l2.5 1 2-3.5zM12.9 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg>
+    </button>
+  </div>
+  <div class="wrap stats" id="stats"></div>
+</header>
+
+<main class="wrap">
+  <div class="controls">
+    <input id="q" type="search" placeholder="Search company, role, skill…" autocomplete="off">
+    <div class="chips" id="catChips"></div>
+    <div class="chips">
+      <select id="typeSel" aria-label="Job type">
+        <option value="">All types</option><option>Full-time</option><option>Internship</option>
+      </select>
+      <select id="statusSel" aria-label="Status">
+        <option value="todo">Not applied</option><option value="">All</option><option value="applied">Applied</option>
+      </select>
+      <label class="toggle"><input type="checkbox" id="newOnly"> New today</label>
+    </div>
+  </div>
+  <p id="count" class="muted"></p>
+  <ul id="list" class="list"></ul>
+  <p id="empty" class="empty" hidden>No jobs match these filters.</p>
+</main>
+
+<dialog id="settings">
+  <form method="dialog" class="settings">
+    <h2>Sync ticks across devices</h2>
+    <p class="muted">Ticks are saved on this device straight away. To see them on both your phone and laptop, paste a GitHub
+      <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">fine-grained token</a>
+      that can only access this repo, with <b>Contents: Read and write</b> permission. It's stored only in this browser.</p>
+    <label>GitHub token <input id="token" type="password" autocomplete="off" placeholder="github_pat_…"></label>
+    <p id="syncState" class="muted"></p>
+    <div class="row">
+      <button value="clear" id="clearToken" class="ghost">Remove token</button>
+      <button value="save" id="saveToken">Save</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="app.js"></script>
+</body>
+</html>
