@@ -25,7 +25,7 @@ GREENHOUSE = {
 LEVER = {
     "paytm": "Paytm", "meesho": "Meesho", "hevodata": "Hevo Data", "zeta": "Zeta",
     "mindtickle": "Mindtickle", "fampay": "FamPay", "ion": "ION Group", "cred": "CRED",
-    "nium": "Nium", "pocketfm": "Pocket FM",
+    "nium": "Nium", "pocketfm": "Pocket FM", "weekdayworks": "Weekday",
 }
 
 ASHBY = {
