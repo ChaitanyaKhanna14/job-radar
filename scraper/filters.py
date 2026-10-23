@@ -58,7 +58,9 @@ EXCLUDE_RE = re.compile(
     r"phd|post-?doc|quality associate|security guard|loss prevention|slp|avp|mid-?level|administrator|coordinator|"
     r"verification|cabling|data center (tech|material)|material associate|operations (associate|executive|coordinator)|"
     r"advocacy|campaign operations|supply chain associate|icqa|reference data|cap planning|wfm|expense|reimbursement|"
-    r"customer operations|data validation|financial representative|infrastructure tech)\b",
+    r"customer operations|data validation|financial representative|infrastructure tech|"
+    r"ops|ops sup|proc analyst|proofing|acctg|rptg|transfer pricing|rwa|cash and trade|data operations|"
+    r"digital associate|quality services|mechatronics|industrial engineer|pharma|video editing|mainframe)\b",
     re.I,
 )
 
