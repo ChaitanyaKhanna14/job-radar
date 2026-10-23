@@ -32,7 +32,7 @@ FRESHER_JD_RE = re.compile(
 INTERN_RE = re.compile(r"\b(intern|internship|interns|trainee|apprentice|co-?op)\b", re.I)
 
 YEARS_RE = re.compile(
-    r"(?:at least|minimum(?: of)?|min\.?)?\s*(\d{1,2})\s*(?:\+|plus)?\s*(?:(?:-|–|to)\s*\d{1,2}\s*)?\+?\s*(?:years?|yrs?)",
+    r"(?:at least|minimum(?: of)?|min\.?)?\s*(?<![\d.,])(\d{1,2})\s*(?:\+|plus)?\s*(?:(?:-|–|to)\s*\d{1,2}\s*)?\+?\s*(?:years?|yrs?)",
     re.I,
 )
 
@@ -105,11 +105,19 @@ def is_india(location):
 
 
 def min_years(text):
-    """Smallest 'N years' requirement mentioned near the word experience, or None."""
+    """Smallest 'N years' requirement mentioned near the word experience, or None.
+    Requirements tied to a Master's/PhD ("Masters + 0 years") don't apply to a B.Tech fresher and are skipped."""
     found = []
     for m in YEARS_RE.finditer(text or ""):
         window = text[max(0, m.start() - 80): m.end() + 80].lower()
-        if "experience" in window or "exp" in window:
+        before = text[max(0, m.start() - 40): m.start()].lower()
+        if re.search(r"master|ph\.?d|post-?grad|m\.?s\b|m\.?tech|mba", before):
+            continue
+        after = text[m.end(): m.end() + 40].lower()
+        # company-history lines ("innovating for 40 years", "over 25 years of helping clients") aren't requirements
+        if re.search(r"\b(for|over|than|nearly|almost)\s*$", before) or re.search(r"^\s*(ago|old|of (history|helping|innovation)|in business)", after):
+            continue
+        if "experience" in window or "exp" in window or re.match(r"\s*(in|of)\b", after):
             n = int(m.group(1))
             if n <= 15:
                 found.append(n)
@@ -163,14 +171,16 @@ def classify(title, description, employment_type="", lenient=False):
     title_signal = bool(FRESHER_TITLE_RE.search(title) or MANAGER_OK_RE.search(title))
     jd_signal = bool(FRESHER_JD_RE.search(desc))
 
+    # Full-time roles must be open to someone with no full-time experience: "1+ years" (even
+    # "non-internship") rules a fresher out, while "0-2 years" or no stated requirement is fine.
     if intern:
         ok = True
-    elif years is not None and years >= 2:
+    elif years is not None and years >= 1:
         ok = False
     elif title_signal or jd_signal:
-        ok = years is None or years <= 1
+        ok = True
     else:
-        ok = years is not None and years <= 1 or (lenient and years is None)
+        ok = years == 0 or (lenient and years is None)
 
     if not ok:
         return None
