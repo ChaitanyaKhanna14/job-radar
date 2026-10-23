@@ -37,13 +37,14 @@ def tasks():
     yield "Amazon", "amazon", S.amazon
     yield "Atlassian", "atlassian", S.atlassian
     yield "Google", "google", S.google
+    yield "Unstop (platform)", "unstop", S.unstop
     yield "Adzuna (aggregator)", "adzuna", S.adzuna
 
 
 def run_one(label, kind, fn):
     out = []
     for raw in fn():
-        verdict = classify(raw["title"], raw.get("description", ""), raw.get("employment_type", ""), lenient=kind == "adzuna")
+        verdict = classify(raw["title"], raw.get("description", ""), raw.get("employment_type", ""), lenient=kind in ("adzuna", "unstop"))
         if not verdict:
             continue
         sal = raw.get("salary_hint") or verdict["salary"]

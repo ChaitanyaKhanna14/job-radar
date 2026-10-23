@@ -322,3 +322,59 @@ def google():
         if page * 20 >= total:
             break
         page += 1
+
+
+CS_SPEC_RE = re.compile(r"computer|cse|\bit\b|information|software|data|artificial|\bai\b|all|any", re.I)
+
+
+def unstop():
+    """Unstop (India's student/fresher platform). Its robots.txt allows /api/public/*.
+    Keeps roles open to 2027 B.Tech CS grads with no experience requirement that pay >= 8 LPA
+    (internships: stipend >= Rs 30k/month). Campus/graduate programmes with undisclosed pay are kept."""
+    for opp in ("jobs", "internships"):
+        page, last = 1, 1
+        while page <= last and page <= 20:
+            d = http_json(f"https://unstop.com/api/public/opportunity/search-result?opportunity={opp}"
+                          f"&page={page}&per_page=100&oppstatus=open")["data"]
+            last = d.get("last_page") or 1
+            for it in d.get("data", []):
+                title = (it.get("title") or "").strip()
+                jd = it.get("jobDetail") or {}
+                if jd.get("paid_unpaid") == "unpaid" or (jd.get("min_experience") or 0) > 0:
+                    continue
+                try:
+                    elig = json.loads((it.get("regnRequirements") or {}).get("eligibility") or "{}")
+                except (TypeError, ValueError):
+                    elig = {}
+                eng = [e for e in (elig.get("engineering") or []) if isinstance(e, dict)] if isinstance(elig, dict) else []
+                years = {y for e in eng for y in (e.get("passoutYear") or [])}
+                specs = " ".join(s for e in eng for s in (e.get("specialization") or []))
+                if years and 2027 not in years:
+                    continue
+                if specs and not CS_SPEC_RE.search(specs):
+                    continue
+                intern = opp == "internships"
+                hi = jd.get("max_salary") or jd.get("min_salary")
+                if jd.get("show_salary") and hi:
+                    annual = hi * 12 if jd.get("pay_in") == "monthly" else hi
+                    if intern and (annual / 12) < 30000:
+                        continue
+                    if not intern and annual < 800000:
+                        continue
+                    salary = f"₹{hi:,.0f}/month" if jd.get("pay_in") == "monthly" else f"₹{hi / 1e5:.1f} LPA"
+                else:
+                    if not re.search(r"2027|graduate|campus|trainee|\bget\b|fresher|new grad", title, re.I) and not years:
+                        continue
+                    salary = "Not disclosed"
+                if not intern and not title_passes(title):
+                    continue
+                locs = jd.get("locations") or [l.get("city") for l in (it.get("locations") or []) if isinstance(l, dict)] or []
+                yield {
+                    "company": (it.get("organisation") or {}).get("name", "Unknown"), "title": title,
+                    "location": ", ".join(x for x in locs if x) or "India",
+                    "url": it.get("seo_url") or it.get("public_url"), "description": html_to_text(it.get("details") or ""),
+                    "posted": _date(it.get("approved_date") or it.get("updated_at")),
+                    "employment_type": "Internship" if intern else "Full-time", "salary_hint": salary,
+                    "source": "Unstop", "ext_id": f"unstop-{it.get('id')}",
+                }
+            page += 1

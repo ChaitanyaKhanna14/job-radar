@@ -19,7 +19,7 @@ GREENHOUSE = {
     "wehrtyou": "Hudson River Trading", "cloudflare": "Cloudflare", "janestreet": "Jane Street",
     "slice": "slice", "clear": "Clear (ClearTax)", "purestorage": "Pure Storage", "celonis": "Celonis",
     "truecaller": "Truecaller", "deliveroo": "Deliveroo", "groupon": "Groupon", "workato": "Workato",
-    "thoughtworks": "Thoughtworks",
+    "thoughtworks": "Thoughtworks", "cloudsek": "CloudSEK",
 }
 
 LEVER = {
