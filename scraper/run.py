@@ -18,7 +18,7 @@ JOBS_FILE = DATA / "jobs.json"
 APPLIED_FILE = DATA / "applied.json"
 IST = timezone(timedelta(hours=5, minutes=30))
 MAX_DESC = 6000
-STALE_DAYS = 60  # drop postings older than this (by posted date) unless applied
+STALE_DAYS = 60  # drop aggregator postings older than this (by posted date) unless applied
 
 
 def tasks():
@@ -97,7 +97,8 @@ def main():
     for jid, j in fresh.items():
         old = prev_by_id.get(jid)
         j["first_seen"] = old["first_seen"] if old else today
-        if j.get("posted") and j["posted"] < cutoff and jid not in applied:
+        # company boards only list open roles; age-out only applies to aggregator listings
+        if j["source"] == "Adzuna" and j.get("posted") and j["posted"] < cutoff and jid not in applied:
             continue
         merged[jid] = j
     for jid, old in prev_by_id.items():
